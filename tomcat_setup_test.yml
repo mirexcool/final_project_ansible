@@ -54,51 +54,43 @@
 
 
   - block:
-    - name: update
-      yum: update_cache=yes
-      ignore_errors: yes
-
     - name: Installating JDK.
-      yum: name=java state=latest
+      yum: name=java-1.8.0-openjdk-devel state=latest
 
     - name: Adding Group and user for Tomcat.
-      shell: groupadd tomcat && useradd -s /bin/false -g tomcat -d /opt/tomcat tomcat
+      shell: sudo useradd -m -U -d /opt/tomcat -s /bin/false tomcat
 
-    - name: Installating curl.
-      yum: name=curl state=latest
-
-    - name: Downloading Apache Tomcat tar.
+    - name: Downloading Apache Tomcat tar
       shell: wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.79/bin/apache-tomcat-8.5.79.tar.gz
       args:
-        chdir: /tmp
-#    - name: Creating Apache Tomcat home directory.
-#      command: mkdir /opt/tomcat
+          chdir: /tmp
 
     - name: Extracting Apache Tomcat.
-      shell: tar -xzvf /tmp/apache-tomcat-8*tar.gz -C /opt/tomcat --strip-components=1
+      shell: tar -xzvf /tmp/apache-tomcat-8*tar.gz
 
-    - name: Updating permission.
-      command: "{{ item }}"
-      with_items:
-        - chown -R tomcat:tomcat /opt/tomcat
-        - chmod -R g+r /opt/tomcat/conf
-        - chmod g+x /opt/tomcat/conf
+    - name: Making directory for Tomcat
+      shell: mkdir -p /opt/tomcat
 
-    - name: Creating service for Apache tomcat.
-      file:
-        path: /etc/systemd/system/tomcat.service
-        state: touch
-        mode: u+rwx,g-rwx,o-x
+    - name: Mooving source files to Tomcat directory
+      shell: mv apache-tomcat-8.5.79 /opt/tomcat/
 
-    - name: download foo.conf
-      get_url:
-        url: https://raw.githubusercontent.com/aftab70/Apache_Tomcat/master/tomcat_services
-        dest: /etc/systemd/system/tomcat.service
+    - name: Create a symbolic link
+      shell: sudo ln -s /opt/tomcat/apache-tomcat-8.5.79 /opt/tomcat/latest
 
-    - name: Deamon reload.
-      command: systemctl daemon-reload
+    - name: Change the directory ownership
+      shell: sudo chown -R tomcat:tomcat /opt/tomcat
 
-    - name: Starting Apache Tomcat service.
-      service: name=tomcat.service state=started
-#      command: sh /opt/tomcat/bin/startup.sh
+    - name: Make the scripts inside bin directory executable
+      shell: sudo sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
+
+    - name: Create a systemd unit file
+      shell: sudo wget https://raw.githubusercontent.com/mirexcool/final_project_ansible/main/tomcat.service
+      args:
+          chdir: /etc/systemd/system/
+
+    - name: Notify systemd that we created a new unit file
+      shell: sudo systemctl daemon-reload
+
+    - name: Start the Tomcat service by executing
+      shell: sudo systemctl start tomcat
     when: ansible_os_family == "RedHat"

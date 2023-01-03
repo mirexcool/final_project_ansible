@@ -66,22 +66,22 @@
           chdir: /tmp
 
     - name: Extracting Apache Tomcat.
-      shell: tar -xzvf /tmp/apache-tomcat-8*tar.gz -C /opt/tomcat --strip-components=1
+      shell: tar -xzvf /tmp/apache-tomcat-8*tar.gz
 
-#    - name: Making directory for Tomcat
-#      shell: mkdir -p /opt/tomcat
+    - name: Making directory for Tomcat
+      shell: mkdir -p /opt/tomcat
 
-#    - name: Mooving source files to Tomcat directory
-#      shell: mv apache-tomcat-8.5.79 /opt/tomcat/
+    - name: Mooving source files to Tomcat directory
+      shell: mv apache-tomcat-8.5.79 /opt/tomcat/
 
-#    - name: Create a symbolic link
-#      shell: sudo ln -s /opt/tomcat/apache-tomcat-8.5.79 /opt/tomcat/latest
+    - name: Create a symbolic link
+      shell: sudo ln -s /opt/tomcat/apache-tomcat-8.5.79 /opt/tomcat/latest
 
     - name: Change the directory ownership
       shell: sudo chown -R tomcat:tomcat /opt/tomcat
 
     - name: Make the scripts inside bin directory executable
-      shell: sudo sh -c 'chmod +x /opt/tomcat/bin/*.sh'
+      shell: sudo sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
 
     - name: Create a systemd unit file
       shell: sudo wget https://raw.githubusercontent.com/mirexcool/final_project_ansible/main/tomcat.service

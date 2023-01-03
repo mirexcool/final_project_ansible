@@ -99,6 +99,6 @@
       command: systemctl daemon-reload
 
     - name: Starting Apache Tomcat service.
-      service: name=tomcat state=started
-      command: sh /opt/tomcat/bin/startup.sh
+      service: name=tomcat.service state=started
+#      command: sh /opt/tomcat/bin/startup.sh
     when: ansible_os_family == "RedHat"

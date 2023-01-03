@@ -2,8 +2,17 @@
 - hosts: test
   become: yes
   tasks:
-  - name: Deploy war to tomcat webapps
-#    shell: wget https://epam-final-project.s3.eu-west-3.amazonaws.com/blog-app.war
-#    shell: sudo rm -f /opt/tomcat/webapps/blog-app.war
-#    shell: sudo mv blog-app.war /opt/tomcat/webapps/blog-app.war
-    action: command  echo "hello"
+
+  - block: # Debian
+    - name: Copy Artifact form S3
+      shell: wget https://epam-final-project.s3.eu-west-3.amazonaws.com/blog-app.war
+    - name: Move Artifact to app folder
+      shell: sudo mv blog-app.war /opt/tomcat/webapps/blog-app.war
+    when: ansible_os_family == "Debian"
+
+  - block: # RedHat
+    - name: Copy Artifact form S3
+      shell: wget https://epam-final-project.s3.eu-west-3.amazonaws.com/blog-app.war
+    - name: Move Artifact to app folder
+      shell: sudo mv blog-app.war /opt/tomcat/latest/webapps/blog-app.war
+    when: ansible_os_family == "RedHat"

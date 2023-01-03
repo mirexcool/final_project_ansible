@@ -1,0 +1,9 @@
+---
+- hosts: test
+  become: yes
+  tasks:
+  - name: Deploy war to tomcat webapps
+#    shell: wget https://epam-final-project.s3.eu-west-3.amazonaws.com/blog-app.war
+#    shell: sudo rm -f /opt/tomcat/webapps/blog-app.war
+#    shell: sudo mv blog-app.war /opt/tomcat/webapps/blog-app.war
+    action: command  echo "hello"

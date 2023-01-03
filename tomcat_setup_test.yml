@@ -66,13 +66,13 @@
           chdir: /tmp
 
     - name: Extracting Apache Tomcat.
-      shell: tar -xzvf /tmp/apache-tomcat-8*tar.gz
+      shell: tar -xzvf /tmp/apache-tomcat-8*tar.gz -C /opt/tomcat --strip-components=1
 
-    - name: Making directory for Tomcat
-      shell: mkdir -p /opt/tomcat
+#    - name: Making directory for Tomcat
+#      shell: mkdir -p /opt/tomcat
 
-    - name: Mooving source files to Tomcat directory
-      shell: mv apache-tomcat-8.5.79 /opt/tomcat/
+#    - name: Mooving source files to Tomcat directory
+#      shell: mv apache-tomcat-8.5.79 /opt/tomcat/
 
     - name: Create a symbolic link
       shell: sudo ln -s /opt/tomcat/apache-tomcat-8.5.79 /opt/tomcat/latest

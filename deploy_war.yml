@@ -4,15 +4,21 @@
   tasks:
 
   - block: # Debian
-    - name: Copy Artifact form S3
-      shell: wget https://epam-final-project.s3.eu-west-3.amazonaws.com/blog-app.war
-    - name: Move Artifact to app folder
-      shell: sudo mv blog-app.war /opt/tomcat/webapps/blog-app.war
+#    - name: Copy Artifact form S3
+#      shell: wget https://epam-final-project.s3.eu-west-3.amazonaws.com/blog-app.war
+#    - name: Move Artifact to app folder
+#      shell: sudo mv blog-app.war /opt/tomcat/webapps/blog-app.war
+#    - name:
+#      shell: cp /home/ec2-user/ansible/blog-app.war /home/ec2-user/ansible/ROOT.war
+    - name:
+      copy: src=/home/ec2-user/ansible/ROOT.war dest=/opt/tomcat/webapps mode=0555
     when: ansible_os_family == "Debian"
 
   - block: # RedHat
-    - name: Copy Artifact form S3
-      shell: wget https://epam-final-project.s3.eu-west-3.amazonaws.com/blog-app.war
-    - name: Move Artifact to app folder
-      shell: sudo mv blog-app.war /opt/tomcat/latest/webapps/blog-app.war
+#    - name: Copy Artifact form S3
+#      shell: wget https://epam-final-project.s3.eu-west-3.amazonaws.com/blog-app.war
+#    - name: Move Artifact to app folder
+#      shell: sudo mv blog-app.war /opt/tomcat/latest/webapps/blog-app.war
+    - name:
+      copy: src=/home/ec2-user/ansible/ROOT.war dest=/opt/tomcat/latest/webapps mode=0555
     when: ansible_os_family == "RedHat"

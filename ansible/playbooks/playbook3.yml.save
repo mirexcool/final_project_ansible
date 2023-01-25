@@ -1,0 +1,20 @@
+---
+- name: Install Apache and upload test web page
+  hosts: all
+  become: yes
+
+  vars:
+    source_file: ./www/index.html
+    destin_file: /var/www/html
+
+  task:
+  - name: Install Apache Web Server
+    yum: name=httpd state=latest
+
+  - name: Copy my test web page to Servers
+    copy: src={{ source_file }} dest={{ destin_file }} mode=0555
+
+  - name: Start We Servers and do it enable on boot
+    service: name=httpd state=started enabled=yes
+
+

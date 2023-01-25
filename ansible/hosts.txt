@@ -1,0 +1,9 @@
+[test_amazon]
+amazon ansible_host=13.38.213.21
+
+[test_ubuntu]
+ubuntu ansible_host=35.180.142.15
+
+[test:children]
+test_amazon
+test_ubuntu

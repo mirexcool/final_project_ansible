@@ -1,0 +1,4 @@
+ansible_user                    : ubuntu
+ansible_ssh_private_key_file    : /home/ec2-user/.ssh/Ansible-Node-2.pem
+environment                     : STAGING
+owner                           : mirexcool

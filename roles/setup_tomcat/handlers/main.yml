@@ -1,0 +1,9 @@
+---
+- name: Daemon reload
+  command: systemctl daemon-reload
+
+- name: Start Apache Tomcat service on Debian
+  service: name=tomcat state=started
+
+- name: Start Apache Tomcat service on RedHat
+  service: name=tomcat state=started

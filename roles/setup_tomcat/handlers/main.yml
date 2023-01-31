@@ -6,4 +6,4 @@
   service: name=tomcat state=started
 
 - name: Start Apache Tomcat service on RedHat
-  service: name=tomcat state=started
+  shell: sudo systemctl start tomcat

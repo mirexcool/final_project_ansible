@@ -1,10 +1,14 @@
 ---
 - hosts: test
   become: yes
-  tasks:
 
-  - block:
-    - name: update
+  vars:
+    tomcat_archive: "https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.79/bin/apache-tomcat-8.5.79.tar.gz"
+    tomcat_service_config: "https://raw.githubusercontent.com/mirexcool/final_project_ansible/main/tomcat.service"
+
+  tasks:
+  - block: ##### BLOCK FOR UBUNTU #####
+    - name: Update packages.
       apt: update_cache=yes
       ignore_errors: yes
 
@@ -18,7 +22,7 @@
       apt: name=curl state=latest
 
     - name: Downloading Apache Tomcat tar.
-      shell: wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.79/bin/apache-tomcat-8.5.79.tar.gz
+      shell: wget {{ tomcat_archive }}
       args:
         chdir: /tmp
     - name: Creating Apache Tomcat home directory.
@@ -40,20 +44,17 @@
         state: touch
         mode: u+rwx,g-rwx,o-x
 
-    - name: download foo.conf
+    - name: Download tomcat config
       get_url:
         url: https://raw.githubusercontent.com/aftab70/Apache_Tomcat/master/tomcat_services
         dest: /etc/systemd/system/tomcat.service
-
-    - name: Deamon reload.
-      command: systemctl daemon-reload
-
-    - name: Starting Apache Tomcat service.
-      service: name=tomcat state=started
+      notify:
+        - Daemon reload
+        - Start Apache Tomcat service on Debian
     when: ansible_os_family == "Debian"
 
 
-  - block:
+  - block: ##### BLOCK FOR REDHAT #####
     - name: Installating JDK.
       yum: name=java-1.8.0-openjdk-devel state=latest
 
@@ -61,7 +62,7 @@
       shell: sudo useradd -m -U -d /opt/tomcat -s /bin/false tomcat
 
     - name: Downloading Apache Tomcat tar
-      shell: wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.79/bin/apache-tomcat-8.5.79.tar.gz
+      shell: wget {{ tomcat_archive }}
       args:
           chdir: /tmp
 
@@ -84,13 +85,20 @@
       shell: sudo sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
 
     - name: Create a systemd unit file
-      shell: sudo wget https://raw.githubusercontent.com/mirexcool/final_project_ansible/main/tomcat.service
+      shell: sudo wget {{ tomcat_service_config  }}
       args:
           chdir: /etc/systemd/system/
-
-    - name: Notify systemd that we created a new unit file
-      shell: sudo systemctl daemon-reload
-
-    - name: Start the Tomcat service by executing
-      shell: sudo systemctl start tomcat
+      notify:
+        - Daemon reload
+        - Start Apache Tomcat service on RedHat
     when: ansible_os_family == "RedHat"
+
+  handlers:
+  - name: Daemon reload
+    command: systemctl daemon-reload
+
+  - name: Start Apache Tomcat service on Debian
+    service: name=tomcat state=started
+
+  - name: Start Apache Tomcat service on RedHat
+    service: name=tomcat state=started

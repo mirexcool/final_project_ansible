@@ -1,0 +1,10 @@
+---
+- block: # Deploy artifact to Debian Tomcat
+  - name:
+    copy: src=/home/ec2-user/ansible/ROOT.war dest=/opt/tomcat/webapps mode=0555
+  when: ansible_os_family == "Debian"
+
+- block: # Deploy artifact to RedHat Tomcat
+  - name:
+    copy: src=/home/ec2-user/ansible/ROOT.war dest=/opt/tomcat/latest/webapps mode=0555
+  when: ansible_os_family == "RedHat"

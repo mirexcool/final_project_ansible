@@ -1,5 +1,5 @@
 ---
 #default tomcat variables
 tomcat_archive: "https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.79/bin/apache-tomcat-8.5.79.tar.gz"
-tomcat_service_config_redhat: "https://raw.githubusercontent.com/mirexcool/final_project_ansible/main/tomcat.service"
+tomcat_service_config_redhat: "https://raw.githubusercontent.com/mirexcool/final_project_ansible/main/config/tomcat.service"
 tomcat_service_config_debian: "https://raw.githubusercontent.com/aftab70/Apache_Tomcat/master/tomcat_services"

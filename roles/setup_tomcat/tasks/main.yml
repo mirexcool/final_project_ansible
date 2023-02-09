@@ -47,7 +47,7 @@
 
 - block: ##### BLOCK FOR REDHAT #####
   - name: Installating JDK.
-    yum: name=java-1.8.0-openjdk-devel state=latest
+    yum: name=java-openjdk11 state=latest
 
   - name: Adding Group and user for Tomcat.
     shell: sudo useradd -m -U -d /opt/tomcat -s /bin/false tomcat
